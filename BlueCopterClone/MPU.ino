@@ -12,14 +12,16 @@
   Lesser General Public License for more details.
 */
 
-#include "MPU.h"
-#include <Arduino.h>
+//#include "MPU.h"
+
+#include <I2Cdev.h>
 #include <MPU6050.h>
 
+#include <Wire.h>
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
-MPU6050 mpug;
+MPU6050 mpu6050;
 
 
 MPU::MPU()
@@ -27,22 +29,22 @@ MPU::MPU()
 }
 
 void MPU::init() {
-  mpug.initialize();
+  mpu6050.initialize();
 #ifdef DEBUG
-  //Serial.println(mpu6050.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+  Serial.println(mpu6050.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 #endif
 }
 
 
 void MPU::getAxlData(int buff[]) {
-  //mpu6050.getAcceleration(&ax, &ay, &az);
+  mpu6050.getAcceleration(&ax, &ay, &az);
   buff[0] = ax;
   buff[1] = ay;
   buff[2] = az;
 }
 
 void MPU::getGyroData(float buff[]) {
-  //mpu6050.getRotation(&gx, &gy, &gz);
+  mpu6050.getRotation(&gx, &gy, &gz);
   buff[0] = gx;
   buff[1] = gy;
   buff[2] = gz;

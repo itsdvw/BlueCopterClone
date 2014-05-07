@@ -11,12 +11,13 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
 */
-#ifndef MPU_h
-#define MPU_h
+#ifndef _MPU_h_
+#define _MPU_h_
+
+#include <I2Cdev.h>
+#include <MPU6050.h>
 
 #include <Wire.h>
-#include <MPU6050.h>
-#include <I2Cdev.h>
 
 class MPU
 {
@@ -26,8 +27,6 @@ void init();
 void getAxlData(int buff[]);
 void getGyroData(float buff[]);
 void getMagData(int buff[]);
-private:
-
 };
 
 #endif
