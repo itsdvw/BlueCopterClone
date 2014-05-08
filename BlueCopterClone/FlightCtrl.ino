@@ -1,60 +1,63 @@
-void FlightControl(){
-  
-Usb.Task();
+void FlightControl() {
 
-if (Xbox.Xbox360Connected) {
-rxVal[0] = Xbox.getAnalogHat(RightHatX);
-rxVal[1] = Xbox.getAnalogHat(LeftHatX);
-rxVal[2] = Xbox.getAnalogHat(LeftHatY);
-rxVal[5] = Xbox.getAnalogHat(RightHatY);
-}
-  
+  Usb.Task();
+
+  if (Xbox.Xbox360Connected) {
+    rxVal[0] = Xbox.getAnalogHat(RightHatX);
+    rxVal[1] = Xbox.getAnalogHat(LeftHatX);
+    rxVal[2] = Xbox.getAnalogHat(LeftHatY);
+    rxVal[5] = Xbox.getAnalogHat(RightHatY);
+  }
+
 #ifdef SAFE
-  if(rxVal[5]<DEADZONE) {
+  if (rxVal[5] < DEADZONE) {
     motorArm();
   }
 #endif
 
-/*
-  if(rxVal[4]<1500){
-    rateAngleSwitch=0;
-    leds_status(0);
+  /*
+    if(rxVal[4]<1500){
+      rateAngleSwitch=0;
+      leds_status(0);
+    }
+    else{
+      rateAngleSwitch=1;
+      leds_status(1);
+      PIDangleX.resetI();
+      PIDangleY.resetI();
+    }
+    */
+  if (rxVal[5] > DEADZONE) {
+    throttle = map(rxVal[5], THROTTLE_RMIN, THROTTLE_RMAX, THROTTLE_WMIN, THROTTLE_WMAX);
+  } else {
+    throttle = MOTOR_ZERO_LEVEL;
   }
-  else{
-    rateAngleSwitch=1;
-    leds_status(1);
-    PIDangleX.resetI();
-    PIDangleY.resetI();
-  }
-  */
 
-  throttle=map(rxVal[5],THROTTLE_RMIN,THROTTLE_RMAX,THROTTLE_WMIN,THROTTLE_WMAX);
-
-//#ifdef RX_EXPO  //Software RX EXPO
-  if(rxVal[0]<0){
-    setZ=map(rxVal[0],STICKMIN,0,YAW_WMAX,0);
+  //#ifdef RX_EXPO  //Software RX EXPO
+  if (rxVal[0] < 0) {
+    setZ = map(rxVal[0], STICKMIN, 0, YAW_WMAX, 0);
   }//if rxVal[0]
-  else{
-    setZ=map(rxVal[0],0,STICKMAX,0,YAW_WMIN);
+  else {
+    setZ = map(rxVal[0], 0, STICKMAX, 0, YAW_WMIN);
   }//else
 
-//  if (rateAngleSwitch == 0){
+  //  if (rateAngleSwitch == 0){
 
-    if(rxVal[1]<0){
-      setX=map(rxVal[1],STICKMIN,0,ROLL_WMIN,0);
-    }//if rxVal[1]
-    else{
-      setX=map(rxVal[1],0,STICKMAX,0,ROLL_WMAX);
-    }//else
+  if (rxVal[1] < 0) {
+    setX = map(rxVal[1], STICKMIN, 0, ROLL_WMIN, 0);
+  }//if rxVal[1]
+  else {
+    setX = map(rxVal[1], 0, STICKMAX, 0, ROLL_WMAX);
+  }//else
 
-    if(rxVal[2]<0){
-      setY=map(rxVal[2],STICKMIN,0,PITCH_WMAX,0);
-    }//if rxVal[2]
-    else{
-      setY=map(rxVal[2],0,STICKMAX,0,PITCH_WMIN);
-    }//else   
-//  }//if rateAngleSwitch==0
-  
+  if (rxVal[2] < 0) {
+    setY = map(rxVal[2], STICKMIN, 0, PITCH_WMAX, 0);
+  }//if rxVal[2]
+  else {
+    setY = map(rxVal[2], 0, STICKMAX, 0, PITCH_WMIN);
+  }//else
+  //  }//if rateAngleSwitch==0
+
   /*
   else{
 
@@ -70,44 +73,49 @@ rxVal[5] = Xbox.getAnalogHat(RightHatY);
     }//if rxVal[2]
     else{
       setY=map(rxVal[2],1520,PITCH_RMAX,0,PITCH_WMIN*RX_RATE_SENSITIVITY);
-    }//else 
+    }//else
   } //else (rateAngleSwitch==1)
-*/
+  */
 
-  if((rxVal[1]>-DEADZONE) & (rxVal[1]<DEADZONE)) setX=0.0;
-  if((rxVal[2]>-DEADZONE) & (rxVal[2]<DEADZONE)) setY=0.0;
-  if((rxVal[0]>-DEADZONE) & (rxVal[0]<DEADZONE)) setZ=0.0;
+  if ((rxVal[1] > -DEADZONE) & (rxVal[1] < DEADZONE)) setX = 0.0;
+  if ((rxVal[2] > -DEADZONE) & (rxVal[2] < DEADZONE)) setY = 0.0;
+  if ((rxVal[0] > -DEADZONE) & (rxVal[0] < DEADZONE)) setZ = 0.0;
 
-//#else
-/*
-  setZ=map(rxVal[0],YAW_RMIN,YAW_RMAX,YAW_WMAX,YAW_WMIN);
-  if (rateAngleSwitch == 0){
-    setX=map(rxVal[1],ROLL_RMIN,ROLL_RMAX,ROLL_WMIN,ROLL_WMAX);
-    setY=map(rxVal[2],PITCH_RMIN,PITCH_RMAX,PITCH_WMAX,PITCH_WMIN);
+  //#else
+  /*
+    setZ=map(rxVal[0],YAW_RMIN,YAW_RMAX,YAW_WMAX,YAW_WMIN);
+    if (rateAngleSwitch == 0){
+      setX=map(rxVal[1],ROLL_RMIN,ROLL_RMAX,ROLL_WMIN,ROLL_WMAX);
+      setY=map(rxVal[2],PITCH_RMIN,PITCH_RMAX,PITCH_WMAX,PITCH_WMIN);
+    }
+    else{
+      setX=map(rxVal[1],ROLL_RMIN,ROLL_RMAX,ROLL_WMIN*RX_RATE_SENSITIVITY,ROLL_WMAX*RX_RATE_SENSITIVITY);
+      setY=map(rxVal[2],PITCH_RMIN,PITCH_RMAX,PITCH_WMAX*RX_RATE_SENSITIVITY,PITCH_WMIN*RX_RATE_SENSITIVITY);
+    }
+  #endif
+  */
+
+  if (rateAngleSwitch == 0) {
+    setX = (int)PIDangleX.Compute((float)setX + angles[0], gy_aver, (float)setX / RX_ANGLE_DAMPNING);
+    setY = (int)PIDangleY.Compute((float)setY - angles[1], gx_aver, (float)setY / RX_ANGLE_DAMPNING);
   }
-  else{
-    setX=map(rxVal[1],ROLL_RMIN,ROLL_RMAX,ROLL_WMIN*RX_RATE_SENSITIVITY,ROLL_WMAX*RX_RATE_SENSITIVITY);
-    setY=map(rxVal[2],PITCH_RMIN,PITCH_RMAX,PITCH_WMAX*RX_RATE_SENSITIVITY,PITCH_WMIN*RX_RATE_SENSITIVITY); 
-  }
-#endif
-*/
+  int PIDroll_val = (int)PIDroll.Compute((float)setX - gy_aver);
+  int PIDpitch_val = (int)PIDpitch.Compute((float)setY - gx_aver);
+  int PIDyaw_val = (int)PIDyaw.Compute((float)setZ - gz_aver);
 
-  if (rateAngleSwitch == 0){
-    setX=(int)PIDangleX.Compute((float)setX+angles[0],gy_aver,(float)setX/RX_ANGLE_DAMPNING);
-    setY=(int)PIDangleY.Compute((float)setY-angles[1],gx_aver,(float)setY/RX_ANGLE_DAMPNING);
-  }
-  int PIDroll_val= (int)PIDroll.Compute((float)setX-gy_aver);
-  int PIDpitch_val= (int)PIDpitch.Compute((float)setY-gx_aver);
-  int PIDyaw_val= (int)PIDyaw.Compute((float)setZ-gz_aver);
+  //int m0_val = throttle + PIDroll_val + PIDpitch_val + PIDyaw_val;
+  //int m1_val = throttle - PIDroll_val + PIDpitch_val - PIDyaw_val;
+  //int m2_val = throttle + PIDroll_val - PIDpitch_val - PIDyaw_val;
+  //int m3_val = throttle - PIDroll_val - PIDpitch_val + PIDyaw_val;
+  
+  int m0_val = throttle + PIDpitch_val;// + PIDyaw_val;
+  int m1_val = throttle - PIDroll_val;// - PIDyaw_val;
+  int m2_val = throttle - PIDpitch_val;// + PIDyaw_val;
+  int m3_val = throttle + PIDroll_val;// - PIDyaw_val;
 
-  int m0_val=throttle+PIDroll_val+PIDpitch_val+PIDyaw_val;
-  int m1_val=throttle-PIDroll_val+PIDpitch_val-PIDyaw_val;
-  int m2_val=throttle+PIDroll_val-PIDpitch_val-PIDyaw_val;
-  int m3_val=throttle-PIDroll_val-PIDpitch_val+PIDyaw_val;
-
-  analogWrite(MOTOR0,m0_val);
-  analogWrite(MOTOR1,m1_val);
-  analogWrite(MOTOR2,m2_val);
-  analogWrite(MOTOR3,m3_val);
+  analogWrite(MOTOR0, constrain(m0_val, MOTOR_ZERO_LEVEL, MOTOR_MAX_LEVEL));
+  analogWrite(MOTOR1, constrain(m1_val, MOTOR_ZERO_LEVEL, MOTOR_MAX_LEVEL));
+  analogWrite(MOTOR2, constrain(m2_val, MOTOR_ZERO_LEVEL, MOTOR_MAX_LEVEL));
+  analogWrite(MOTOR3, constrain(m3_val, MOTOR_ZERO_LEVEL, MOTOR_MAX_LEVEL));
 
 }

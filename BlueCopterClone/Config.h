@@ -8,13 +8,13 @@
 //-------PID Config----------
 
 #define ROLL_PID_KP  0.250
-#define ROLL_PID_KI  0.950
+#define ROLL_PID_KI  0//.950
 #define ROLL_PID_KD  0.011
 #define ROLL_PID_MIN  -50.0
 #define ROLL_PID_MAX  50.0
 
 #define PITCH_PID_KP  0.250
-#define PITCH_PID_KI  0.950
+#define PITCH_PID_KI  0//.950
 #define PITCH_PID_KD  0.011
 #define PITCH_PID_MIN  -50.0
 #define PITCH_PID_MAX  50.0
@@ -105,7 +105,7 @@
 
 #define SPLIT  0.99 //COMP-filter nr
 #define RadToDeg 180.0/PI 
-#define  ACC_HPF_NR  98  //high pass filter nr
+#define  ACC_HPF_NR  0  //high pass filter nr
 #define  GYRO_HPF_NR 0   //high pass filter nr
 #define  GYRO_MAF_NR  2  //Moving average filter nr
 //*************************************
@@ -123,8 +123,8 @@
 
 //Motor Pins
 #define MOTOR0  6
-#define MOTOR1  9
-#define MOTOR2  5
+#define MOTOR1  5
+#define MOTOR2  3
 #define MOTOR3  9
 
 
@@ -139,15 +139,12 @@
 #define LED13  13
 //*************************************
 
-
-
-//.......RX PINS............
-//#define RX_PIN_ROLL  16     //PCINT2
-//#define RX_PIN_PITCH  14    //PCINT3
-//#define RX_PIN_YAW  15      //PCINT1
-//#define RX_PIN_THROTTLE  7  //INT6
-//#define RX_PIN_AUX1  8      //PCINT4
-//#define RX_PIN_AUX2  0      //INT2
-//#define RX_INT_AUX2  2
-//#define RX_INT_THROTTLE 4
-//........................
+// MPU defines
+#define GYROSENS 131.f // gyro sensitivity for default 250dps range
+// offsets
+#define GXOFF -7
+#define GYOFF -5
+#define GZOFF 26
+#define AXOFF -841
+#define AYOFF 939
+#define AZOFF 1384

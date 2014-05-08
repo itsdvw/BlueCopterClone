@@ -56,6 +56,7 @@ void setup() {
   while(!Serial);
 #endif
   mpu.init();
+  Serial.println("bp2");
   motorInit();
   leds_init();
   rxInit();

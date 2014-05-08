@@ -12,7 +12,7 @@
   Lesser General Public License for more details.
 */
 
-//#include "MPU.h"
+#include "MPU.h"
 
 #include <I2Cdev.h>
 #include <MPU6050.h>
@@ -33,6 +33,12 @@ void MPU::init() {
 #ifdef DEBUG
   Serial.println(mpu6050.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
 #endif
+  mpu6050.setXGyroOffset(GXOFF);
+  mpu6050.setYGyroOffset(GYOFF);
+  mpu6050.setZGyroOffset(GZOFF);
+  mpu6050.setXAccelOffset(AXOFF);
+  mpu6050.setYAccelOffset(AYOFF);
+  mpu6050.setZAccelOffset(AZOFF);
 }
 
 
@@ -45,9 +51,9 @@ void MPU::getAxlData(int buff[]) {
 
 void MPU::getGyroData(float buff[]) {
   mpu6050.getRotation(&gx, &gy, &gz);
-  buff[0] = gx;
-  buff[1] = gy;
-  buff[2] = gz;
+  buff[0] = gx / GYROSENS;
+  buff[1] = gy / GYROSENS;
+  buff[2] = gz / GYROSENS;
 }
 
 void MPU::getMagData(int buff[]) {

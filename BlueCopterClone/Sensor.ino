@@ -32,9 +32,9 @@ void updateSensorVal(){
 void updateAcc(){//High pass filter
   int buffer[3]; //Axl buffer
   mpu.getAxlData(buffer);
-  buffer[0]=buffer[0]-ACC_X_OFFSET; 
-  buffer[1]=buffer[1]-ACC_Y_OFFSET;
-  buffer[2]=buffer[2]-ACC_Z_OFFSET;
+  //buffer[0]=buffer[0]-ACC_X_OFFSET; 
+  //buffer[1]=buffer[1]-ACC_Y_OFFSET;
+  //buffer[2]=buffer[2]-ACC_Z_OFFSET;
   accx_temp=(ACC_HPF_NR*accx_temp+(100-ACC_HPF_NR)*buffer[0])/100;
   accy_temp=(ACC_HPF_NR*accy_temp+(100-ACC_HPF_NR)*buffer[1])/100;
   accz_temp=(ACC_HPF_NR*accz_temp+(100-ACC_HPF_NR)*buffer[2])/100;
